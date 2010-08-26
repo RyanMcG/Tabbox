@@ -1,0 +1,63 @@
+.tb { 
+	float: left;
+	margin: 2em;
+	width: 45em;
+}
+
+.clear {
+	clear: both;
+	}
+
+.tb-selector-bar {
+	height: 2em;
+	font-size: 1.2em;
+	}
+
+.tb-selector-piece {
+	float: left;
+	padding: .45em;
+	margin: 0 .2em 0 0;
+	cursor: pointer;
+}
+
+.tb-selector-piece.arrow {
+	font-size: 1.4em;
+	padding: .15em .6em;
+	}
+
+.tb-selector-piece.right {
+	margin-right: 0;
+}
+
+.tb-selector-piece-active {
+	padding-bottom: .7em;
+}
+
+.tb-content {
+	padding: 1em;
+	margin-top: .35em;
+	}
+
+.tb-text {
+	width: 260px;
+	float: left;
+	}
+	
+.tb-image img {
+	max-width: 180px;
+	max-height: 180px;
+	}
+.tb-image {
+	float: left;
+	padding: 0 1.2em 0 0;
+	}
+
+.tb .readmore {
+	text-align: right;
+	display: block;
+	font-style: oblique;
+	}
+
+.tb-data {
+	display: none;
+}
