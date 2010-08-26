@@ -29,7 +29,7 @@ function setupTabbox()
 	wp_localize_script('tabbox', 'tabbox_stuff', array('ajaxurl' => admin_url('admin-ajax.php')));
 
 //UNCOMMENT THE SECTION BELOW TO CREATE THE "TAB" POST TYPE 	
-
+/*
 	register_post_type( 'tab',
 		array(
 			'labels' => array(
@@ -48,13 +48,13 @@ function setupTabbox()
 			'publicly_queryable' => true,
 		  )
 	);
-
+*/
 }
 
 //This function can be placed anywhere to generate a Tabbox
 function placeTabbox($tb_query_args) //If the commented section above is uncommented the $tb_query_args['post_type'] value can be set to 'tab'.
 {
-	$tb_query_args = array_merge(array('post_type' => 'tab', 'post_status' => 'publish', 'posts_per_page' => 3), (array) $tb_query_args);
+	$tb_query_args = array_merge(array('post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => 3), (array) $tb_query_args);
 	echo '
 	<div class="tb">';
 	
