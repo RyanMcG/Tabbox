@@ -14,12 +14,6 @@ License: GPL2
 add_action('init', 'setupTabbox');
 add_shortcode('tabbox', 'shortcodeTabbox');
 
-//Add actions for dynamicly loading more tabs
-add_action('wp_ajax_getmoretabs', 'getMoreTabs');
-add_action('wp_ajax_nopriv_getmoretabs', 'getMoreTabs');
-
-
-
 function setupTabbox()
 {
 	$tb_vers = '1.3';
@@ -54,98 +48,63 @@ function setupTabbox()
 //This function can be placed anywhere to generate a Tabbox
 function placeTabbox($tb_query_args) //If the commented section above is uncommented the $tb_query_args['post_type'] value can be set to 'tab'.
 {
-	$tb_query_args = array_merge(array('post_type' => 'study', 'post_status' => 'publish', 'posts_per_page' => 3), (array) $tb_query_args);
+	$tb_query_args = array_merge(array('post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => -1), (array) $tb_query_args);
 	echo '
 	<div class="tb">';
 	placeTabboxContents($tb_query_args);
 	echo '
+		<div class="clear"></div>
 	</div>';
 }
 
 function placeTabboxContents($tb_query_args)
 {
 	//Filters are added (and later removed) to change the output of The Loop function calls.
+	$tb_query = new WP_Query($tb_query_args);
+	//START CONTENT OUTPUT
+	echo '
+		<div class="tb-selector-bar">';
+	
+	//Add selector bar title filter.
 	add_filter('the_title', 'tb_title');
+	if($tb_query->have_posts())
+	{
+		while($tb_query->have_posts())
+		{
+			$tb_query->the_post();
+			the_title();
+		}
+	}
+	echo '
+		</div>';
+	//Remove selector bar title filter.
+	remove_filter('the_title', 'tb_title');
+	
+	//Add filters for actual content
+	add_filter('the_title', 'tbc_title');
 	add_filter('the_content', 'tb_content');
 	add_filter('post_thumbnail_html', 'tb_thumbnail');
 	
-	$doquery = true;
-	if(isset($tb_query_args['next'])) 	//If this is an ajax request asking for more tabs this block executes.
-	{
-		if($tb_query_args['next'] == 'true')
-			$tb_query_args['offset'] = $tb_query_args['offset'] + $tb_query_args['posts_per_page'];
-		else if($tb_query_args['offset'] == 0)
+	$tb_query->rewind_posts();
+	if($tb_query->have_posts())
+	{	
+		while($tb_query->have_posts())
 		{
-			$doquery = false;
-			echo("-2");
-		}
-		else if($tb_query_args['offset'] - $tb_query_args['posts_per_page'] > 0)
-			$tb_query_args['offset'] = $tb_query_args['offset'] - $tb_query_args['posts_per_page'];
-		else
-			$tb_query_args['offset'] = 0;
-		unset($tb_query_args['next']);	//Get rid of the "next" argument so it does not get sent as part of the database query.
-	}			
-	
-	if($doquery)
-	{
-		$tb_query = new WP_Query($tb_query_args);
-		//If the Query returns too few posts then requery witht the correct offest. (Should only execute when the number of total posts is greater than posts per page.)
-		if($tb_query->post_count == 0 && $tb_query_args['offset'] != 0)
-		{
-			echo("-3");  //This is interpreted as the end and is not diplayed by jQuery
-		}
-		else
-		{
-			//START CONTENT OUTPUT
+			$tb_query->the_post();
+			global $more;
+			$more = 0;
 			echo '
-				<form class="tb-data" name="tb_data">';
-				
-			foreach($tb_query_args as $key => $value)
-			{
-				echo '
-				<input type="hidden" name="'.$key.'" value="'.$value.'" />';
-			}
-				
-			echo '
-				</form>
-				<div class="tb-selector-bar">
-					<div class="tb-selector-piece arrow">
-						&laquo;
-					</div>';
-			
-			if($tb_query->have_posts())
-			{
-				while($tb_query->have_posts())
-				{
-					$tb_query->the_post();
-					the_title();
-				}
-			}
-			echo '
-					<div class="tb-selector-piece right arrow" >
-						&raquo;
-					</div>
-				</div>';
-			
-			$tb_query->rewind_posts();
-			if($tb_query->have_posts())
-			{	
-				while($tb_query->have_posts())
-				{
-					$tb_query->the_post();
-					echo '
-					<div class="tb-content">';
-					the_post_thumbnail(array(180, 180));
-					the_content('<span class="readmore">Read More &raquo;</span>');
-					echo'
-					</div>';
-				}
-			}
-			//END CONTENT OUTPUT
+			<div class="tb-content">';
+			the_title();
+			the_post_thumbnail(array(250, 250));
+			the_content('<span class="readmore">Read More &raquo;</span>');
+			echo'
+			</div>';
 		}
 	}
+	//END CONTENT OUTPUT
 	//Then the filters are removed so they don't change other posts.
-	remove_filter('the_title', 'tb_title');
+	remove_filter('the_title', 'tbc_title');
 	remove_filter('the_content', 'tb_content');
 	remove_filter('post_thumbnail_html', 'tb_thumbnail');
 }
@@ -156,6 +115,14 @@ function tb_title($title)
 	<div class="tb-selector-piece">
 		'.$title.'
 	</div>';
+}
+
+function tbc_title($title)
+{
+	return '
+	<h5 class="tb-content-title">
+		'.$title.'
+	</h5>';
 }
 
 function tb_thumbnail($thumbnail)
@@ -171,8 +138,7 @@ function tb_content($content)
 	return '
 	<div class="tb-text">
 		'.$content.'
-	</div>
-	<div class="clear"></div>';
+	</div>';
 }
 
 function shortcodeTabbox($atts)
@@ -180,14 +146,6 @@ function shortcodeTabbox($atts)
 	$atts = (array) $atts;
 	unset($a[0]);
 	placeTabbox($atts);
-}
-
-function getMoreTabs()
-{
-	$a = array_merge(array('post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => 3), $_POST);	
-	unset($a['action']);
-	placeTabboxContents($a);
-	exit;
 }
 
 ?>

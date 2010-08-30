@@ -1,7 +1,5 @@
-.tb { 
-	float: left;
-	margin: 2em;
-	width: 45em;
+.tb {
+	margin: 1em 0;
 }
 
 .clear {
@@ -9,47 +7,50 @@
 	}
 
 .tb-selector-bar {
-	height: 2em;
-	font-size: 1.2em;
+	font-size: 1.1em;
+	width: 194px;
+	float: left;
 	}
 
 .tb-selector-piece {
-	float: left;
-	padding: .45em;
-	margin: 0 .2em 0 0;
+	padding: .4em .8em;
 	cursor: pointer;
+	margin-bottom: 2px;
 }
 
-.tb-selector-piece.arrow {
-	font-size: 1.4em;
-	padding: .15em .6em;
-	}
-
-.tb-selector-piece.right {
-	margin-right: 0;
-}
-
-.tb-selector-piece-active {
-	padding-bottom: .7em;
+.tb-selector-piece.active {
+	font-weight: bold;
+	margin-right: -.4em;
+	padding-right: 0;
 }
 
 .tb-content {
-	padding: 1em;
-	margin-top: .35em;
+	padding: 10px;
+	margin-left: 196px;
+	}
+.tb-content-title {
+	text-align: right;
+	font-size: 1.4em;
+	border-bottom: 1px solid #eaebeb;
+	margin: 0 2em .6em 1em;
+	padding-right: 1em;
 	}
 
 .tb-text {
-	width: 260px;
-	float: left;
+	text-align: justify;
 	}
 	
 .tb-image img {
-	max-width: 180px;
-	max-height: 180px;
+	/* The max width and height values should be the same as those of the_post_thumbnail set in functions.php for this plugin */
+	max-width: 250px;
+	max-height: 250px;
+	border: 1px solid #eaebeb;
+	padding: .3em;
 	}
+
 .tb-image {
 	float: left;
-	padding: 0 1.2em 0 0;
+	margin-right: 1.1em;
 	}
 
 .tb .readmore {
