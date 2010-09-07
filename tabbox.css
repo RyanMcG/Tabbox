@@ -1,5 +1,4 @@
 .tb {
-	margin: 1em 0;
 }
 
 .clear {
@@ -31,7 +30,6 @@
 .tb-content-title {
 	text-align: right;
 	font-size: 1.4em;
-	border-bottom: 1px solid #eaebeb;
 	margin: 0 2em .6em 1em;
 	padding-right: 1em;
 	}
@@ -44,7 +42,6 @@
 	/* The max width and height values should be the same as those of the_post_thumbnail set in functions.php for this plugin */
 	max-width: 250px;
 	max-height: 250px;
-	border: 1px solid #eaebeb;
 	padding: .3em;
 	}
 
