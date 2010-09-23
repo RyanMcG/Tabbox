@@ -10,7 +10,6 @@ $j(document).ready(function ($)
 {
 	if($(".tb").length > 0)
 	{
-		$(".tb-content").hide();
 		var minheight = $j(".tb .tb-selector-bar").height() - 22;
 		$j(".tb .tb-content").css({minHeight: minheight});
 		//Prepare tb-selector-piece elements to be clicked on
