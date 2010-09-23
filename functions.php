@@ -49,20 +49,27 @@ function setupTabbox()
 function placeTabbox($tb_query_args) //If the commented section above is uncommented the $tb_query_args['post_type'] value can be set to 'tab'.
 {
 	$tb_query_args = array_merge(array('post_type' => 'post', 'post_status' => 'publish', 'posts_per_page' => -1), (array) $tb_query_args);
-	echo '
+	$output .= '
 	<div class="tb">';
-	placeTabboxContents($tb_query_args);
-	echo '
+	$output .= placeTabboxContents($tb_query_args);
+	$output .= '
 		<div class="clear"></div>
 	</div>';
+	return $output;
+}
+
+function printTabbox($tb_query_args)
+{
+	echo placeTabbox($tb_query_args);
 }
 
 function placeTabboxContents($tb_query_args)
 {
 	//Filters are added (and later removed) to change the output of The Loop function calls.
 	$tb_query = new WP_Query($tb_query_args);
+	$output;
 	//START CONTENT OUTPUT
-	echo '
+	$output .= '
 		<div class="tb-selector-bar">';
 	
 	//Add selector bar title filter.
@@ -72,10 +79,10 @@ function placeTabboxContents($tb_query_args)
 		while($tb_query->have_posts())
 		{
 			$tb_query->the_post();
-			the_title();
+			$output .= get_the_title($tb_query->post->ID);
 		}
 	}
-	echo '
+	$output .= '
 		</div>';
 	//Remove selector bar title filter.
 	remove_filter('the_title', 'tb_title');
@@ -93,12 +100,14 @@ function placeTabboxContents($tb_query_args)
 			$tb_query->the_post();
 			global $more;
 			$more = 0;
-			echo '
+			$output .= '
 			<div class="tb-content">';
-			the_title();
-			the_post_thumbnail(array(250, 250));
-			the_content('<span class="readmore">Read More &raquo;</span>');
-			echo'
+			$output .= get_the_title($tb_query->post->ID);
+			get_the_post_thumbnail($tb_query->post->ID, array(250, 250));
+			$content = get_the_content( '<span class="readmore">Read More &raquo;</span>');
+			$content = apply_filters('the_content', $content);
+			$output .= str_replace(']]>', ']]&gt;', $content);			
+			$output .= '
 			</div>';
 		}
 	}
@@ -107,6 +116,8 @@ function placeTabboxContents($tb_query_args)
 	remove_filter('the_title', 'tbc_title');
 	remove_filter('the_content', 'tb_content');
 	remove_filter('post_thumbnail_html', 'tb_thumbnail');
+	
+	return $output;
 }
 
 function tb_title($title)
@@ -145,7 +156,7 @@ function shortcodeTabbox($atts)
 {
 	$atts = (array) $atts;
 	unset($a[0]);
-	placeTabbox($atts);
+	return placeTabbox($atts);
 }
 
 ?>
