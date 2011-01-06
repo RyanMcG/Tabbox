@@ -20,7 +20,6 @@ function setupTabbox()
 	wp_enqueue_script('tabbox', WP_PLUGIN_URL.'/tabbox/tabbox.js', array('jquery'), $tb_vers);
 	wp_enqueue_style('tabbox', WP_PLUGIN_URL.'/tabbox/tabbox.css', $tb_vers, 'all');
 	wp_enqueue_style('tabbox-mod', get_bloginfo('stylesheet_directory').'/css/tabbox-mod.css');
-	wp_localize_script('tabbox', 'tabbox_stuff', array('ajaxurl' => admin_url('admin-ajax.php')));
 
 //UNCOMMENT THE SECTION BELOW TO CREATE THE "TAB" POST TYPE 	
 /*
@@ -132,7 +131,7 @@ function tbc_title($title)
 {
 	return '
 	<h5 class="tb-content-title">
-		'.$title.'
+		<a href="'.get_bloginfo('url').'/undergraduate/area-of-study/'.sanitize_title_with_dashes($title).'">'.$title.'</a>
 	</h5>';
 }
 
