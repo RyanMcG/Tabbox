@@ -22,8 +22,8 @@ function setupTabbox()
 	wp_enqueue_style('tabbox-mod', get_bloginfo('stylesheet_directory').'/css/tabbox-mod.css');
 
 //UNCOMMENT THE SECTION BELOW TO CREATE THE "TAB" POST TYPE 	
-/*
-	register_post_type( 'tab',
+
+	register_post_type( 'tabbox',
 		array(
 			'labels' => array(
 					'name' => __('Tabs'),
@@ -36,12 +36,13 @@ function setupTabbox()
 					'not_found' => __('No tabs found'),
 					'not_found_in_trash' => __('No tabs found in Trash'),
 				),
-			'supports' => array('title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments'),
+			'supports' => array('title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'page-attributes'),
 			'public' => true,
 			'publicly_queryable' => true,
+			'taxonomies' => array('category')
 		  )
 	);
-*/
+
 }
 
 //This function can be placed anywhere to generate a Tabbox
