@@ -132,7 +132,7 @@ function tbc_title($title)
 {
 	return '
 	<h5 class="tb-content-title">
-		<a href="'.get_bloginfo('url').'/undergraduate/area-of-study/'.sanitize_title_with_dashes($title).'">'.$title.'</a>
+		'.$title.'
 	</h5>';
 }
 
